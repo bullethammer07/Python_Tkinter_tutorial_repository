@@ -23,7 +23,7 @@ l2 = Label(f2, text="This is a Label !!.....", bg="green", fg="blue", borderwidt
 f1.pack(side=LEFT, fill=Y)
 f2.pack(side=TOP, fill=X)
 # packing the label
-l1.pack(side=LEFT, pady=50)
-l2.pack(side=LEFT, pady=50)
+l1.pack(side=LEFT, pady=50, padx=10)
+l2.pack(side=LEFT, pady=50, padx=10)
 
 root.mainloop()
