@@ -55,6 +55,12 @@ def get_val():
         f.write(f"{name}, {age}, {mail}, {nation}" + "\n")
         
     f.close()
+    
+    # clearing the fields after Submit is Clicked, using set()
+    name_value.set("")
+    age_value.set("")
+    mail_value.set("")
+    nation_value.set(0)
 
 # making function for the 'Delete Log button'
 def del_log():
