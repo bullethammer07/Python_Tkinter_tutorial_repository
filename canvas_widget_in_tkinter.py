@@ -29,6 +29,13 @@ can_widget.create_oval(100, 100, 500, 200, fill="red")
 can_widget.create_oval(300, 300, 400, 400, fill="green")
 
 # making text using 'create_text' : """Create text with coordinates x1,y1. as center coordinate"""
-can_widget.create_text(100, 100, text='Jayant Yadav')
+can_widget.create_text(100, 100, text='Jayant Yadav', font="comicsans 50 italic")
+
+# Canvas window object :
+# You can place any Tkinter widget onto a canvas by using a canvas window object. 
+# A window is a rectangular area that can hold one Tkinter widget.
+
+# making a window using 'create_window' : """Create window with coordinates x1,y1,x2,y2."""
+can_widget.create_window(300, 300, anchor=N+W)
 
 root.mainloop()
