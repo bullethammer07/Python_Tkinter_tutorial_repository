@@ -2,6 +2,9 @@
 #           Events in Tkinter                       
 #---------------------------------------------------
 
+# NOTE : Visit site : https://effbot.org/tkinterbook/tkinter-events-and-bindings.htm for details of different events in tkinter
+#        also refer documentation.
+
 from tkinter import *
 
 root = Tk()
@@ -19,6 +22,10 @@ def click_beh(evt):
     # NOTE : We can use the attributes 'x' and 'y' of the event argument specified 'evt'
     #        the 'x' and 'y' return the coordinates where the click was made
     print(f"Button Clicked !!... {evt.x , evt.y}")
+    
+# Making function for hovering or entering into the button area
+def btn_hover(evt):
+    print(f"Coordinates : {evt.x , evt.y}")
 
 # Making a button
 # NOTE : here we have specified a color using 'activebackground' for what happens when the button is clicked.
@@ -26,7 +33,9 @@ def click_beh(evt):
 bt1 = Button(root, text="Click Me", padx=10, pady=10, command=button_beh, bg="yellow", activebackground='#696969')
 bt1.pack()
 
-# Binding and event to the widget
+# Binding clicking of left mouse button event to the widget
 bt1.bind("<Button-1>", func=click_beh)
+# binding hovering of pointer event to the widget
+bt1.bind("<Enter>", func=btn_hover)
 
 root.mainloop()
