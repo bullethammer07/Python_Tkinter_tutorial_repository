@@ -8,7 +8,7 @@ import tkinter.messagebox as mbox
 
 root = Tk()
 root.geometry("300x100")
-root.title("Menus and Submenus")
+root.title("Message Boxes")
 
 # Menubar is like the complete set of menu available on top. It will Contain all objects like 'File' 'Edit' 'View' 'Help' etc
 menubar = Menu(root)
