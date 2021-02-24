@@ -34,4 +34,4 @@ b2.pack(side=LEFT, padx=5, pady=5)
 b2 = Button(f1, fg="red", text="Click Me")
 b2.pack(side=LEFT, padx=5, pady=5)
 
-root.mainloop()
+root.mainloop() # This is a coomment

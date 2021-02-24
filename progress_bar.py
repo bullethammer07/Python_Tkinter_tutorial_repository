@@ -20,7 +20,7 @@ progress = Progressbar(root,
 def bar():
     import time
     progress['value'] = 20
-    root.update_idletasks()
+    root.update_idletasks() 
     time.sleep(1)
 
     progress['value'] = 40
