@@ -1,7 +1,7 @@
 import tkinter as tk
 import tkinter.messagebox as mbox
-# from tkinter import Frame
 import re
+import sys
 
 # Create the main window
 root = tk.Tk()
@@ -10,7 +10,6 @@ root.geometry("800x400")
 
 glbl_ft_size = 8
 GLOB_TEST=0
-
 
 def create_x_span_frame(parent_frame, bord_w=0, relief = tk.GROOVE, test=GLOB_TEST, px=0, empty=0, ht=5):
         if empty == 1:
@@ -87,7 +86,7 @@ l_msg_frame = create_x_span_frame(l_frame)
 l_space_frame0 = create_space_frame(l_frame)
 l_content_frame = create_x_span_frame(l_frame)
 l_space_frame1 = create_space_frame(l_frame)
-l_space_frame2 = create_space_frame(l_frame)
+# l_space_frame2 = create_space_frame(l_frame)
 l_btn_frame = create_x_span_frame(l_frame)
 
 r_msg_frame = create_x_span_frame(r_frame)
@@ -95,6 +94,55 @@ r_space_frame0 = create_space_frame(r_frame)
 r_content_frame = create_x_span_frame(r_frame)
 r_space_frame1 = create_space_frame(r_frame)
 r_btn_frame = create_x_span_frame(r_frame)
+
+added_interfaces = [] # lIst of all added interface names
+
+def add_generated_interface_frame(container, interface_name, interface_port_list):
+
+    # Check if Interface alread part of existing interfaces
+    if interface_name in added_interfaces:
+        err_dialog(f"Interface with specified name \'{interface_name}\' already added.\nPlease choose another interface name.")
+    else:
+        frame = tk.Frame(container, bg='white', highlightbackground='grey', highlightthickness=2)
+        frame.pack(side=tk.TOP, fill="x")
+
+        delete_button = tk.Button(frame, text="Delete Interface", command=lambda: delete_generated_interface_frame(frame, interface_name))
+        delete_button.pack(side=tk.RIGHT)
+
+        lbl = tk.Label(frame, text=f"  {interface_name}  ", font=("Helvetica", glbl_ft_size, 'bold'), pady=0, width=47)
+        lbl.pack(side=tk.TOP, fill="x", expand=True)
+
+        # Update the scroll region as new frames are added
+        r_canvas.config(scrollregion=r_canvas.bbox("all"))
+
+        added_interfaces.append(interface_name)
+
+# Function to delete a frame
+def delete_generated_interface_frame(frame, if_name):
+    # Check if Interface alread part of existing interfaces
+    if if_name in added_interfaces:
+        frame.destroy()
+        # Update the scroll region after deleting a frame
+        r_canvas.config(scrollregion=r_canvas.bbox("all"))
+        added_interfaces.remove(if_name)
+    else:
+        err_dialog(f"SYSTEM ERROR : Interface \'{if_name}\' is not part of any existing interfaces.")
+        sys.exit(1)
+
+# Create a canvas in the 'r_content_frame'
+r_canvas = tk.Canvas(r_content_frame, height=300, highlightbackground="grey", highlightthickness=2)
+r_canvas.pack(side="left", fill="both", expand=True)
+# Create a scrollbar and attach it to the canvas
+r_scrollbar = tk.Scrollbar(r_content_frame, command=r_canvas.yview)
+r_scrollbar.pack(side="left", fill="y")
+r_canvas.config(yscrollcommand=r_scrollbar.set)
+# Create a frame inside the canvas to hold other frames
+canvas_frame = tk.Frame(r_canvas)
+# canvas_frame.pack(side=tk.TOP, fill="x")
+r_canvas.create_window((0, 0), window=canvas_frame, anchor="nw")
+
+# Update the scroll region after the main loop executed, to take initial frame into account
+r_canvas.after(100, lambda: r_canvas.config(scrollregion=r_canvas.bbox("all")))
 
 l_list_frame = tk.Frame(l_content_frame, height=5, borderwidth=0, relief=tk.GROOVE, padx=20)
 l_list_frame.pack(side=tk.TOP, fill="x")
@@ -104,7 +152,6 @@ enter_ifname_lbl = tk.Label(l_options_frame, text=f"  Specify Interface Name : "
 ifname_entry_var = tk.StringVar()
 ifname_entry =  tk.Entry(l_options_frame, textvariable=ifname_entry_var, width=30)
 ifname_entry.pack(side=tk.LEFT)
-
 
 port_listbox = create_listbox(l_list_frame)
 populate_listbox(port_listbox, module_portlist_1)
@@ -130,17 +177,17 @@ def is_valid_module_string(input_string):
         return False
 
 def ports_and_ifname_sanity_check(ports_list, ifname):
-     if len(ports_list) == 0:
-          err_dialog(f"No signals selected for Interface Generation.")
-          return 1
-     elif ifname == """""":
-          err_dialog(f"No Interface Name specified.")
-          return 1
-     elif is_valid_module_string(ifname) == False:
-          err_dialog(f"Invalid Interface name \'{ifname}\'. Interface name must be as per IEEE Verilog/System Verilog norms.")
-          return 1
-     else:
-        return 0
+    if len(ports_list) == 0:
+         err_dialog(f"No signals selected for Interface Generation.")
+         return 1
+    elif ifname == """""":
+         err_dialog(f"No Interface Name specified.")
+         return 1
+    elif is_valid_module_string(ifname) == False:
+         err_dialog(f"Invalid Interface name \'{ifname}\'. Interface name must be as per IEEE Verilog/System Verilog norms.")
+         return 1
+    else:
+       return 0
 
 def get_selected_ports_and_ifname():
     curr_selected_vals = port_listbox.curselection()
@@ -150,18 +197,47 @@ def get_selected_ports_and_ifname():
         curr_ports_list.append(module_portlist_1[i])
 
     ifname = ifname_entry_var.get()
-    ports_and_ifname_sanity_check(curr_ports_list, ifname)
-    print(curr_ports_list, ifname)
+    sanity_chk = ports_and_ifname_sanity_check(curr_ports_list, ifname)
+    # print(curr_ports_list, ifname)
+
+    if sanity_chk == 0:
+         # Create the initial frame with a red border
+        add_generated_interface_frame(canvas_frame, interface_name=ifname, interface_port_list=curr_ports_list)
     
 def clear_all():
-     ifname_entry.delete(0, tk.END)
-     port_listbox.selection_clear(0, tk.END)
+    ifname_entry.delete(0, tk.END)
+    port_listbox.selection_clear(0, tk.END)
 
 lbl1 = tk.Label(l_msg_frame, text=f"Below is list if ports parsed.\nSelect ports you wish to create an Interface of.", font=("Helvetica", glbl_ft_size), pady=2, width=40) .pack(side=tk.TOP)
 lbl2 = tk.Label(r_msg_frame, text=f"List of Interfaces created.", font=("Helvetica", glbl_ft_size, 'bold underline'), pady=2) .pack(side=tk.TOP)
 
-create_if_btn = tk.Button(l_btn_frame, text=f"Create Interface\nfrom selected Signals",font=("Helvetica", glbl_ft_size), command=get_selected_ports_and_ifname, width=20, padx=10).pack(side=tk.LEFT)
-clear_if_btn = tk.Button(l_btn_frame, text=f"Clear All\nSignals + Name",font=("Helvetica", glbl_ft_size), command=clear_all, width=20, padx=10).pack(side=tk.RIGHT)
+create_if_btn = tk.Button(l_btn_frame, text=f"Create Interface\nfrom selected Signals",font=("Helvetica", glbl_ft_size), command=get_selected_ports_and_ifname, width=20, padx=10)
+create_if_btn.pack(side=tk.LEFT)
+clear_if_btn = tk.Button(l_btn_frame, text=f"Clear All\nSignals + Name",font=("Helvetica", glbl_ft_size), command=clear_all, width=20, padx=10)
+clear_if_btn.pack(side=tk.RIGHT)
+
+def final_interfaces_submit():
+    create_if_btn.config(state="disabled")
+    clear_if_btn.config(state="disabled")
+
+    # Function to disable widgets recursively
+    def disable_widgets_recursively(container):
+        for child in container.winfo_children():
+            # If the child is a frame, call this function recursively
+            if isinstance(child, tk.Frame):
+                disable_widgets_recursively(child)
+            # Otherwise, disable the widget
+            else:
+                child.config(state=tk.DISABLED)
+
+    # Disabling everything inside the 'r_content_frame'
+    disable_widgets_recursively(canvas_frame)
+    final_submit_btn.config(state="disabled")
+    #r_btn_frame.destroy()
+    print(added_interfaces)
+
+final_submit_btn = tk.Button(r_btn_frame, text=f"Proceed with Selected Interfaces",font=("Helvetica", glbl_ft_size), command=final_interfaces_submit, width=25, padx=10)
+final_submit_btn.pack(side=tk.TOP)
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------
 
