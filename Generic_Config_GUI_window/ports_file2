@@ -1,0 +1,47 @@
+input  ,                           , dfx_rst_n
+i      ,                           , sys_reset_n
+i      , [CSSD_NUM_TRGRS-1 : 0]    , cssd_trig_n
+i      ,                           , cdc_trig_in
+i      , [DFX_NUM_CLOCKS-1 : 0]    , root_clk_in
+I      ,                           , clk_observe_in_ext
+I      ,   2                       , clock_dr
+I      ,   3                       , reset_tap_b
+I      ,   4                       , shift_dr
+I      ,   10                      , capture_dr
+I      ,   PARAM_1                 , update_dr
+input  ,                           , select_dr
+input  , [TOT_SCAN_NUM_CHNL-1:0]   , scan_chnl_in_ext
+input  , [TOT_SCAN_NUM_CHNL-1:0]   , scan_chnl_mask_in_ext
+input  , [SCAN_NUM_ODCC_CH-1:0]    , scan_odcc_chnl_in_ext
+input  , [SCAN_NUM_ODCC_CH-1:0]    , scan_odcc_chnl_mask_in_ext
+input  , [TOT_SCAN_NUM_CHAINS-1:0] , scan_data_out_int
+input  ,                           , scan_en_n_ext
+INPUT  ,                           , scan_clk_n_ext
+INPUT  ,                           , scan_mode_rst_n_ext
+INPUT  ,  PARAM_N                  , scan_edt_updt_n_ext
+input  ,  PARAM_N                  , ijtag_tdi_ext
+input  ,  PARAM_N                  , ijtag_tdi_return_ext
+input  ,                           , scan_clear_clk
+input  , [MEMCLR_WIDTH-1:0]        , dfx0_mem_clear_pass_in_ext
+input  , [MEMCLR_WIDTH-1:0]        , dfx0_mem_clear_trigger
+o      ,                           , dfx0_scan_clear_done_ext
+o      ,                           , dfx0_scan_clear_pass_out_ex
+o      , [DFX_NUM_CLOCKS-1 : 0]    , clk_root_int
+o      ,                           , ijtag_tdo_ext
+O      ,                           , ijtag_tdo_return_ext
+O      ,                           , scan_en
+O      ,                           , scan_mode
+output ,                           , scan_rst_byp
+output ,                           , scan_lat_byp_en , 33
+output ,                           , scan_mode_rst_n , PARAM_P
+output ,                           , scan_ram_byp    , [13:0]
+OUTPUT ,                           , scan_mode_stuckat
+OUTPUT ,                           , scan_en_stuckat
+OUTPUT ,                           , scan_clkgate_en
+output , [TOT_SCAN_NUM_CHNL-1:0]   , scan_chnl_out_ext ,
+output , [SCAN_NUM_ODCC_CH-1:0]    , scan_odcc_chnl_out_ext ,
+output , [TOT_SCAN_NUM_CHAINS-1:0] , scan_data_in_int
+inout  ,                           , io_1
+INOUT  ,                           , io_12
+io     ,                           , io_2
+IO     ,                           , io_3

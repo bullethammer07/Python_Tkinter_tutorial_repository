@@ -1,0 +1,69 @@
+   // Shared reset and CSSD trigger 
+   //
+   input 					dfx_rst_n, // Connect to PORB      	
+   input 					sys_reset_n, // Connect to System Reset      	
+   input [CSSD_NUM_TRGRS-1 : 0] 		cssd_trig_n, // CSSD trigger from fabric 
+
+      input cdc_trig_in,
+
+   // DFx: Root Clock interface 
+   //
+   input [DFX_NUM_CLOCKS-1 : 0] 		root_clk_in, // Root clock inputs
+   output [DFX_NUM_CLOCKS-1 : 0] 		clk_root_int, // Root clock outputs         
+
+    // v1.9
+    input clk_observe_in_ext,
+
+   // Shared: IJTAG signals from TAP
+   //
+   input 					clock_dr, // IJTAG clock           
+   input 					reset_tap_b, // IJTAG Reset    
+          input 					shift_dr, // IJTAG shift
+          input 					capture_dr, // IJTAG capture
+          input 					update_dr, // IJTAG update
+          input 					select_dr, // IJTAG select
+
+   // DFx Scan channels/Chains
+   //
+   input [TOT_SCAN_NUM_CHNL-1:0] 	scan_chnl_in_ext, // Scan channels input	
+   input [TOT_SCAN_NUM_CHNL-1:0] 	scan_chnl_mask_in_ext, // Scan channels input	
+   output [TOT_SCAN_NUM_CHNL-1:0] 	scan_chnl_out_ext, // Scan channels output
+        input [SCAN_NUM_ODCC_CH-1:0] 		scan_odcc_chnl_in_ext, // Scan control channel input
+        input [SCAN_NUM_ODCC_CH-1:0] 		scan_odcc_chnl_mask_in_ext, // Scan control channel input
+        output [SCAN_NUM_ODCC_CH-1:0] 		scan_odcc_chnl_out_ext, // Scan control channel output
+   output [TOT_SCAN_NUM_CHAINS-1:0] scan_data_in_int, // Scan input chains	
+   input [TOT_SCAN_NUM_CHAINS-1:0] 	scan_data_out_int, // Scan output chains
+
+   // Shared Scan inputs from fabric
+   //
+   input 					            scan_en_n_ext, // Fabric input, shared for 3 DFx controllers 
+   input 					scan_clk_n_ext, // Fabric input, shared for 3 DFx controllers
+   input 					scan_mode_rst_n_ext, // Fabric input, shared for 3 DFx controllers
+   input 					            scan_edt_updt_n_ext, // Fabric input, shared for 3 DFx controllers
+
+   // DFx SCAN control outputs
+   //
+   output 					scan_en, // Connected to flops/rst byp modules of its own scan domain	
+   output 					scan_mode, // Connected to flops/rst byp modules of its own scan domain
+   output 					scan_rst_byp, // Connected to flops/rst byp modules of its own scan domain
+   output 					scan_lat_byp_en, // Connected to flops/rst byp modules of its own scan domain
+   output 					scan_mode_rst_n, // Connected to flops/rst byp modules of its own scan domain
+   output 					scan_ram_byp, // Connected to flops/rst byp modules of its own scan domain
+   output 					            scan_mode_stuckat, // Connected to flops/rst byp modules of its own scan domain
+   output 					            scan_en_stuckat, // Connected to flops/rst byp modules of its own scan domain
+   output 					            scan_clkgate_en,
+
+   // JTAG TDI-TDO Chain between DFx controllers
+   //
+   input 	               				ijtag_tdi_ext, // JTAG TDI to/from ext or from other DFx controller 
+   output 	               				ijtag_tdo_return_ext, // JTAG TDI to/from ext or from other DFx controller 
+   output 	               				ijtag_tdo_ext, // JTAG TDI to/from ext or from other DFx controller 
+   input 	               				ijtag_tdi_return_ext, // JTAG TDI to/from ext or from other DFx controller 
+
+   // Scan-MEM Clear Ext inputs/outputs
+   //
+   input 					scan_clear_clk, // Connect to cfg_mclk 
+     input [MEMCLR_WIDTH-1:0] 			dfx0_mem_clear_pass_in_ext,     
+     input [MEMCLR_WIDTH-1:0] 			dfx0_mem_clear_trigger,     
+   output 					dfx0_scan_clear_done_ext, 
+   output 					dfx0_scan_clear_pass_out_ext
