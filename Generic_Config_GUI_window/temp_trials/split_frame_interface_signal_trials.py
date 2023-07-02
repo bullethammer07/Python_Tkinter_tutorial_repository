@@ -34,7 +34,6 @@ def create_space_frame(parent_frame, height=10):
         return space_fr
 
 def create_listbox(parent_frame):
-
     # Create a vertical Scrollbar
     v_scrollbar = tk.Scrollbar(parent_frame, orient=tk.VERTICAL)
     v_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
